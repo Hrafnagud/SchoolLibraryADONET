@@ -33,18 +33,60 @@ namespace SchoolLibraryADONET
             UC_MyButtonUpdate.myButton.Click += new EventHandler(btn_BookUpdate);
 
             //Update combobox to be filled
-            UpdateTabClean();
+            UpdateTabGroupboxClean();
             BringAllBooksToComboBox();
             BringAllAuthorsToComboBox();
             BringAllGenresToComboBox();
 
             tabControl1.Click += new EventHandler(tabControl1_Click);
+
+            UC_AddButton.myButton.Text = "Add Book";
+            UC_AddButton.myButton.Click += new EventHandler(btn_AddBook);
+
+            UC_MyButtonDelete.myButton.Text = "Remove Book";
+            UC_MyButtonDelete.myButton.Click += new EventHandler(btn_RemoveBook);
+
+
         }
 
         private void tabControl1_Click(object sender, EventArgs e)
         {
             BringAllBooksToGridWithView();
             BringAllBooksToComboBox();
+            UpdateTabGroupboxPassiveClean();
+            AddTabCleanAllControls();
+            DeleteTabCleanAllControls();
+        }
+
+        private void UpdateTabGroupboxPassiveClean()
+        {
+            comboBoxBookUpdate.SelectedIndex = -1;
+            UpdateTabGroupboxClean();
+            groupBoxBookUpdate.Enabled = false;
+        }
+
+        private void UpdateTabGroupboxActiveClean()
+        {
+            groupBoxBookUpdate.Enabled = true;
+            UpdateTabGroupboxClean();
+        }
+
+        private void DeleteTabCleanAllControls()
+        {
+            comboRemoveBook.SelectedIndex = 1;
+            comboRemoveBook.Text = "Choose a book..";
+            richTextBoxBook.Clear();
+        }
+
+        private void AddTabCleanAllControls()
+        {
+            textAddBookName.Clear();
+            comboAddAuthor.Text = "Add Author..";
+            comboAddGenre.Text = "Add Genre..";
+            comboAddGenre.SelectedIndex = -1;
+            comboAddAuthor.SelectedIndex = -1;
+            numericUpDownAddPages.Value = 0;
+            numericUpDownAddStock.Value = 0;
         }
 
         private void BringAllGenresToComboBox()
@@ -63,6 +105,12 @@ namespace SchoolLibraryADONET
                     comboUpdateGenre.ValueMember = "GenreId";
                     comboUpdateGenre.DataSource = virtualTable;
                     comboUpdateGenre.SelectedIndex = -1;
+
+                    comboAddGenre.DisplayMember = "GenreName";
+                    comboAddGenre.ValueMember = "GenreId";
+                    comboAddGenre.DataSource = virtualTable;
+                    comboAddGenre.SelectedIndex = -1;
+                    comboAddGenre.Text = "Select Genre..";
                 }
             }
             catch (Exception ex)
@@ -87,6 +135,11 @@ namespace SchoolLibraryADONET
                     comboUpdateAuthor.DataSource = virtualTable;
                     comboUpdateAuthor.SelectedIndex = -1;
 
+                    comboAddAuthor.DisplayMember = "AuthorFullName";
+                    comboAddAuthor.ValueMember = "AuthorId";
+                    comboAddAuthor.DataSource = virtualTable;
+                    comboAddAuthor.SelectedIndex = -1;
+                    comboAddAuthor.Text = "Choose an Author";
                 }
             }
             catch (Exception ex)
@@ -101,7 +154,7 @@ namespace SchoolLibraryADONET
             {
                 using (connection)
                 {
-                    SqlCommand command = new SqlCommand("Select * from Books order by BookName", connection);
+                    SqlCommand command = new SqlCommand("Select * from Books where IsPassive=0 order by BookName", connection);
                     OpenConnection();
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     DataTable virtualTable = new DataTable();
@@ -110,6 +163,12 @@ namespace SchoolLibraryADONET
                     comboBoxBookUpdate.ValueMember = "BookId";
                     comboBoxBookUpdate.DataSource = virtualTable;
                     comboBoxBookUpdate.SelectedIndex = -1;
+
+                    comboRemoveBook.DisplayMember = "BookName";
+                    comboRemoveBook.ValueMember = "BookId";
+                    comboRemoveBook.DataSource = virtualTable;
+                    comboRemoveBook.SelectedIndex = -1;
+                    comboRemoveBook.Text = "Choose a book..";
                     CloseConnection();
                 }
             }
@@ -158,12 +217,27 @@ namespace SchoolLibraryADONET
         private void btn_BookUpdate(object sender, EventArgs e)
         {
             //If author has not chosen, book name not written, stock and pages less than 0 warning
-            if (numericUpDownPagesUpdate.Value <= 0 || 
-                numericUpDownUpdateStoc.Value <= 0 || 
-                comboUpdateAuthor.SelectedIndex < 0 ||
-                string.IsNullOrEmpty(textUpdateBookName.Text.Trim()))
+            if (string.IsNullOrEmpty(textUpdateBookName.Text.Trim()))
             {
-                MessageBox.Show("Missing information.. Provide correct information");
+                MessageBox.Show("Enter a book name please!", "WARNING", MessageBoxButtons.OK);
+                UpdateTabGroupboxPassiveClean();
+            }
+            else if(numericUpDownPagesUpdate.Value <= 0)
+            {
+                MessageBox.Show("Page number must be greater than to zero!", "WARNING", MessageBoxButtons.OK);
+                UpdateTabGroupboxPassiveClean();
+            }
+
+            else if (numericUpDownUpdateStoc.Value <= 0)
+            {
+                MessageBox.Show("Stock must be greater than zero!", "WARNING", MessageBoxButtons.OK);
+                UpdateTabGroupboxPassiveClean();
+            }
+
+            else if (comboUpdateAuthor.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please choose an author!", "WARNING", MessageBoxButtons.OK);
+                UpdateTabGroupboxPassiveClean();
             }
             else
             {
@@ -184,6 +258,137 @@ namespace SchoolLibraryADONET
             }
         }
 
+        private void btn_AddBook(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(textAddBookName.Text.Trim()))
+                {
+                    MessageBox.Show("Book name must be provided!", "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AddTabCleanAllControls();
+                }
+                else if (numericUpDownAddPages.Value <= 0)
+                {
+                    MessageBox.Show("Pages must be greater than zero!", "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AddTabCleanAllControls();
+                }
+                else if (numericUpDownAddStock.Value <= 0)
+                {
+                    MessageBox.Show("Stock must be greater than zero!", "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AddTabCleanAllControls();
+                }
+                else if (comboAddAuthor.SelectedIndex < 0)
+                {
+                    MessageBox.Show("Author of the book must be chosen!", "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AddTabCleanAllControls();
+                }
+                else
+                {
+                    using (connection)
+                    {
+                        //Adding will be done with an sql procedure.
+                        SqlCommand command = new SqlCommand($"SP_AddBook", connection);
+                        command.CommandType = CommandType.StoredProcedure;
+                        //Add parameters.
+
+                        //First approach
+                        //SqlParameter bookNameParameter = new SqlParameter();
+                        //bookNameParameter.Value = "@BookName";
+
+                        //Second approach
+                        command.Parameters.AddWithValue("@registerDate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        command.Parameters.AddWithValue("@bookName", textAddBookName.Text.Trim());  //much more easier.
+                        command.Parameters.AddWithValue("@pages", numericUpDownAddPages.Value);
+                        command.Parameters.AddWithValue("@genreId", (int)comboAddGenre.SelectedValue);
+                        command.Parameters.AddWithValue("@authorId", (int)comboAddAuthor.SelectedValue);
+                        command.Parameters.AddWithValue("@stock", numericUpDownAddStock.Value);
+                        OpenConnection();
+
+                        int recentlyAddedBookId = Convert.ToInt32(command.ExecuteScalar()); //Procedure selects (returns) one and only value (scope_identity). 
+                        //To receive that only returned value, ExecuteScalar() method can be used.
+                        if (recentlyAddedBookId > 0)
+                        {
+                            MessageBox.Show($"New book has been added. \nBookID: {recentlyAddedBookId}");
+                            AddTabCleanAllControls();
+                        }
+                        else
+                        {
+                            MessageBox.Show("It seems no book has been added recently!", "WARNING", MessageBoxButtons.OK);
+                        }
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An Error has occured during adding book to the system!" + ex.Message);
+            }
+        }
+
+        private void btn_RemoveBook(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult response = MessageBox.Show("Would you like to hide record instead of deleting?","WARNING", MessageBoxButtons.YesNoCancel,MessageBoxIcon.Question);
+
+                if (response == DialogResult.Yes)
+                {
+                    //Record will be hidden, not removed from db
+                    SqlCommand command = new SqlCommand($"update Books set IsPassive=1 where BookId={comboRemoveBook.SelectedValue.ToString()}", connection);
+                    OpenConnection();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if(rowsAffected > 0)
+                    {
+                        MessageBox.Show("Book has been removed from the list.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("An error has occured during removal of the book selected!");
+                    }
+                }
+
+                else if (response == DialogResult.No)
+                {
+                    SqlCommand command = new SqlCommand($"select * from Books b inner join LoanBook l on b.BookId = l.BookId " +
+                        $"where b.BookId = {comboRemoveBook.SelectedValue.ToString()}", connection);
+                    OpenConnection();
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    //Object that can contain more than one datatable.
+                    DataSet dataset = new DataSet();
+                    adapter.Fill(dataset);
+                    if ((int)dataset.Tables[0].Rows.Count > 0)
+                    {
+                        MessageBox.Show("Book has been loaned. You can't remove loaned book! Book should be removed from loaned books management!");
+                    }
+                    else
+                    {
+                        //Book is not loaned. Can be removed!
+                        command = new SqlCommand("delete from Books where BookId = @bookId", connection);
+                        command.Parameters.Clear();
+                        command.Parameters.AddWithValue("@bookId", comboRemoveBook.SelectedValue.ToString());
+                        OpenConnection();
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if(rowsAffected > 0)
+                        {
+                            MessageBox.Show("Record has been deleted!");
+                            DeleteTabCleanAllControls();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Error has occured during deletion!");
+                        }
+                    }
+
+                    CloseConnection();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error has occured during deletion! " + ex.Message );
+            }
+        }
+
         private void BringAllBooksToGridWithView()
         {
             try
@@ -191,12 +396,13 @@ namespace SchoolLibraryADONET
                 SqlCommand command = new SqlCommand();
                 command.Connection = connection;
                 command.CommandType = CommandType.Text;
-                command.CommandText = "Select * from View_BookAuthorGenre";
+                command.CommandText = "Select * from View_BookAuthorGenre where IsPassive = 0";
                 OpenConnection();
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable virtualTable = new DataTable();
                 adapter.Fill(virtualTable);
                 dataGridViewBooks.DataSource = virtualTable;
+                dataGridViewBooks.Columns["IsPassive"].Visible = false;
                 CloseConnection();
 
             }
@@ -244,17 +450,18 @@ namespace SchoolLibraryADONET
         {
             if (comboBoxBookUpdate.DataSource != null & comboBoxBookUpdate.SelectedIndex >= 0)
             {
+                UpdateTabGroupboxActiveClean();
                 int chosenAuthorId = (int)comboBoxBookUpdate.SelectedValue;
-                UpdateTabClean();
+                UpdateTabGroupboxClean();
                 ComboChosenBookInfoFill(chosenAuthorId);
             }
             else
             {
-                UpdateTabClean();
+                UpdateTabGroupboxPassiveClean();
             }
         }
 
-        private void UpdateTabClean()
+        private void UpdateTabGroupboxClean()
         {
             textUpdateBookName.Clear();
             numericUpDownPagesUpdate.Value = 0;
@@ -263,6 +470,40 @@ namespace SchoolLibraryADONET
             comboUpdateAuthor.Text = "Choose Author";
             comboUpdateGenre.SelectedIndex = -1;
             comboUpdateGenre.Text = "Choose Genre";
+        }
+
+        private void comboRemoveBook_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Chosen book details will be written into richtext.
+            //Let's perform that task with dataset.
+            try
+            {
+                if (comboRemoveBook.SelectedIndex >= 0)
+                {
+                    using (connection)
+                    {
+                        SqlCommand command = new SqlCommand($"select * from Books b left join Genre g on b.GenreId=g.GenreId left join Authors a on b.AuthorId=a.AuthorId where BookId={comboRemoveBook.SelectedValue}", connection);
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        OpenConnection();
+                        DataSet dataSet = new DataSet();
+                        adapter.Fill(dataSet, "Books");
+
+                        string bookDetails = dataSet.Tables["Books"].Rows[0]["BookName"].ToString() + "\n" +
+                            dataSet.Tables["Books"].Rows[0]["GenreName"].ToString() + "\n" +
+                            dataSet.Tables["Books"].Rows[0]["AuthorFullName"].ToString();
+
+                        command = new SqlCommand($"select * from View_LoanedBooks where BookId={comboRemoveBook.SelectedValue}", connection);
+                        object loanedBooksQuantity = command.ExecuteScalar();
+                        loanedBooksQuantity = loanedBooksQuantity == null ? 0 : loanedBooksQuantity;
+                        bookDetails += $"\n{loanedBooksQuantity} of this book has been loaned.";
+                        richTextBoxBook.Text = bookDetails;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unexpected error has occured! " + ex.Message);
+            }
         }
     }
 }
