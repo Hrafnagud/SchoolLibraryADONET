@@ -30,15 +30,15 @@ namespace SchoolLibraryADONET
         private void InitializeComponent()
         {
             this.groupBoxStudent = new System.Windows.Forms.GroupBox();
-            this.groupBoxBook = new System.Windows.Forms.GroupBox();
-            this.groupBoxLoanDates = new System.Windows.Forms.GroupBox();
-            this.dataGridViewLoanedBooks = new System.Windows.Forms.DataGridView();
             this.comboBoxStudent = new System.Windows.Forms.ComboBox();
+            this.groupBoxBook = new System.Windows.Forms.GroupBox();
             this.comboBoxBook = new System.Windows.Forms.ComboBox();
+            this.groupBoxLoanDates = new System.Windows.Forms.GroupBox();
+            this.dateTimePickerEnds = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePickerStarts = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.dateTimePickerStarts = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePickerEnds = new System.Windows.Forms.DateTimePicker();
+            this.dataGridViewLoanedBooks = new System.Windows.Forms.DataGridView();
             this.UC_MyButtonLoan = new SchoolLibraryADONET.UC_MyButton();
             this.groupBoxStudent.SuspendLayout();
             this.groupBoxBook.SuspendLayout();
@@ -56,6 +56,15 @@ namespace SchoolLibraryADONET
             this.groupBoxStudent.TabStop = false;
             this.groupBoxStudent.Text = "Choose a Student";
             // 
+            // comboBoxStudent
+            // 
+            this.comboBoxStudent.FormattingEnabled = true;
+            this.comboBoxStudent.Location = new System.Drawing.Point(8, 41);
+            this.comboBoxStudent.Name = "comboBoxStudent";
+            this.comboBoxStudent.Size = new System.Drawing.Size(592, 24);
+            this.comboBoxStudent.TabIndex = 1;
+            this.comboBoxStudent.SelectedIndexChanged += new System.EventHandler(this.comboBoxStudent_SelectedIndexChanged);
+            // 
             // groupBoxBook
             // 
             this.groupBoxBook.Controls.Add(this.comboBoxBook);
@@ -65,6 +74,15 @@ namespace SchoolLibraryADONET
             this.groupBoxBook.TabIndex = 0;
             this.groupBoxBook.TabStop = false;
             this.groupBoxBook.Text = "Choose a Book";
+            // 
+            // comboBoxBook
+            // 
+            this.comboBoxBook.FormattingEnabled = true;
+            this.comboBoxBook.Location = new System.Drawing.Point(8, 44);
+            this.comboBoxBook.Name = "comboBoxBook";
+            this.comboBoxBook.Size = new System.Drawing.Size(592, 24);
+            this.comboBoxBook.TabIndex = 2;
+            this.comboBoxBook.SelectedIndexChanged += new System.EventHandler(this.comboBoxBook_SelectedIndexChanged);
             // 
             // groupBoxLoanDates
             // 
@@ -80,35 +98,22 @@ namespace SchoolLibraryADONET
             this.groupBoxLoanDates.TabStop = false;
             this.groupBoxLoanDates.Text = "Choose Date Intervals";
             // 
-            // dataGridViewLoanedBooks
+            // dateTimePickerEnds
             // 
-            this.dataGridViewLoanedBooks.AllowUserToAddRows = false;
-            this.dataGridViewLoanedBooks.AllowUserToDeleteRows = false;
-            this.dataGridViewLoanedBooks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewLoanedBooks.Location = new System.Drawing.Point(26, 305);
-            this.dataGridViewLoanedBooks.Name = "dataGridViewLoanedBooks";
-            this.dataGridViewLoanedBooks.ReadOnly = true;
-            this.dataGridViewLoanedBooks.RowHeadersWidth = 51;
-            this.dataGridViewLoanedBooks.RowTemplate.Height = 24;
-            this.dataGridViewLoanedBooks.Size = new System.Drawing.Size(1153, 361);
-            this.dataGridViewLoanedBooks.TabIndex = 0;
+            this.dateTimePickerEnds.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePickerEnds.Location = new System.Drawing.Point(9, 132);
+            this.dateTimePickerEnds.Name = "dateTimePickerEnds";
+            this.dateTimePickerEnds.Size = new System.Drawing.Size(453, 22);
+            this.dateTimePickerEnds.TabIndex = 5;
             // 
-            // comboBoxStudent
+            // dateTimePickerStarts
             // 
-            this.comboBoxStudent.FormattingEnabled = true;
-            this.comboBoxStudent.Location = new System.Drawing.Point(8, 41);
-            this.comboBoxStudent.Name = "comboBoxStudent";
-            this.comboBoxStudent.Size = new System.Drawing.Size(592, 24);
-            this.comboBoxStudent.TabIndex = 1;
-            this.comboBoxStudent.SelectedIndexChanged += new System.EventHandler(this.comboBoxStudent_SelectedIndexChanged);
-            // 
-            // comboBoxBook
-            // 
-            this.comboBoxBook.FormattingEnabled = true;
-            this.comboBoxBook.Location = new System.Drawing.Point(8, 44);
-            this.comboBoxBook.Name = "comboBoxBook";
-            this.comboBoxBook.Size = new System.Drawing.Size(592, 24);
-            this.comboBoxBook.TabIndex = 2;
+            this.dateTimePickerStarts.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePickerStarts.Location = new System.Drawing.Point(9, 61);
+            this.dateTimePickerStarts.Name = "dateTimePickerStarts";
+            this.dateTimePickerStarts.Size = new System.Drawing.Size(453, 22);
+            this.dateTimePickerStarts.TabIndex = 4;
+            this.dateTimePickerStarts.ValueChanged += new System.EventHandler(this.dateTimePickerStarts_ValueChanged);
             // 
             // label1
             // 
@@ -128,21 +133,18 @@ namespace SchoolLibraryADONET
             this.label2.TabIndex = 3;
             this.label2.Text = "Loan Ending Date";
             // 
-            // dateTimePickerStarts
+            // dataGridViewLoanedBooks
             // 
-            this.dateTimePickerStarts.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePickerStarts.Location = new System.Drawing.Point(9, 61);
-            this.dateTimePickerStarts.Name = "dateTimePickerStarts";
-            this.dateTimePickerStarts.Size = new System.Drawing.Size(453, 22);
-            this.dateTimePickerStarts.TabIndex = 4;
-            // 
-            // dateTimePickerEnds
-            // 
-            this.dateTimePickerEnds.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePickerEnds.Location = new System.Drawing.Point(9, 132);
-            this.dateTimePickerEnds.Name = "dateTimePickerEnds";
-            this.dateTimePickerEnds.Size = new System.Drawing.Size(453, 22);
-            this.dateTimePickerEnds.TabIndex = 5;
+            this.dataGridViewLoanedBooks.AllowUserToAddRows = false;
+            this.dataGridViewLoanedBooks.AllowUserToDeleteRows = false;
+            this.dataGridViewLoanedBooks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewLoanedBooks.Location = new System.Drawing.Point(26, 305);
+            this.dataGridViewLoanedBooks.Name = "dataGridViewLoanedBooks";
+            this.dataGridViewLoanedBooks.ReadOnly = true;
+            this.dataGridViewLoanedBooks.RowHeadersWidth = 51;
+            this.dataGridViewLoanedBooks.RowTemplate.Height = 24;
+            this.dataGridViewLoanedBooks.Size = new System.Drawing.Size(1153, 361);
+            this.dataGridViewLoanedBooks.TabIndex = 0;
             // 
             // UC_MyButtonLoan
             // 

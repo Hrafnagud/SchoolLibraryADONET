@@ -77,6 +77,20 @@ namespace SchoolLibraryADONET_DataAccessLayer
             return retVal;
         }
 
+        public DataTable GetTheData(string query)
+        {
+            DataTable retVal = new DataTable();
+
+            using (mySqlConnection)
+            {
+                mySqlCommand = new SqlCommand(query, mySqlConnection);
+                OpenConnection();
+                mySqlDataAdapter = new SqlDataAdapter(mySqlCommand);
+                mySqlDataAdapter.Fill(retVal);
+            }
+            return retVal;
+        }
+
         public void OpenConnection()
         {
             try
@@ -107,6 +121,20 @@ namespace SchoolLibraryADONET_DataAccessLayer
 
                 throw ex;
             }
+        }
+
+        public object GetTheDataByExecuteScalar(string query)
+        {
+            object retVal = null;
+
+            using (mySqlConnection)
+            {
+                mySqlCommand = new SqlCommand(query, mySqlConnection);
+                OpenConnection();
+                retVal = mySqlCommand.ExecuteScalar();
+            }
+
+            return retVal;
         }
     }
 }
