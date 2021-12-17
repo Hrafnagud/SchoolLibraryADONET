@@ -249,7 +249,11 @@ namespace SchoolLibraryADONET
                 int rowsAffected = command.ExecuteNonQuery();
                 if (rowsAffected > 0)
                 {
-                    MessageBox.Show($"Content belongs to {comboBoxBookUpdate.SelectedItem} has been updated.");
+                    DataRowView data = comboBoxBookUpdate.SelectedItem as DataRowView;
+                    string bookNameBeforeUpdate = data.Row.ItemArray[2].ToString();
+                    MessageBox.Show($"Content belongs to {bookNameBeforeUpdate} has been updated.");
+                    BringAllBooksToComboBox();
+                    BringAllBooksToGridWithView();
                 }
                 else
                 {

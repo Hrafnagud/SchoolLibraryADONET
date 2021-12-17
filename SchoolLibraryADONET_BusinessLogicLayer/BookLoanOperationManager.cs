@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SchoolLibraryADONET_BusinessLogicLayer.ViewModals;
 using SchoolLibraryADONET_DataAccessLayer;
 
 namespace SchoolLibraryADONET_BusinessLogicLayer
@@ -53,6 +54,42 @@ namespace SchoolLibraryADONET_BusinessLogicLayer
             {
                 throw ex;
             }
+        }
+
+        public List<OperationViewModal> BringDataToGridWithViewModal()
+        {
+            List<OperationViewModal> data = new List<OperationViewModal>();
+
+            try
+            {
+                DataTable myData = new DataTable();
+                myData = myPocketFrameDAL.GetTheData("select l.OperationId, b.BookId, s.Id, CONCAT(s.NameOfStudent, ' ', s.Surname) as StudentFullName, b.BookName, l.LoanStarts, l.LoanEnds, l.isReturned from  LoanBook l inner join Books b on b.BookId= l.BookId inner join Students s on s.Id= l.StudentId");
+
+                //Data obtained with dataTable. We'll loop through data to transfer into ViewModal
+
+                for (int i = 0; i < myData.Rows.Count; i++)
+                {
+                    DataRow line = myData.Rows[i];
+                    OperationViewModal datum = new OperationViewModal()
+                    {
+                        OperationId = (int)myData.Rows[i].ItemArray[0],
+                        BookId = (int)myData.Rows[i].ItemArray[1],
+                        StudentId = (int)myData.Rows[i].ItemArray[2],
+                        StudentFullName = myData.Rows[i].ItemArray[3].ToString(),
+                        BookName = myData.Rows[i].ItemArray[4].ToString(),
+                        LoanStarts = Convert.ToDateTime(myData.Rows[i].ItemArray[5]),
+                        LoanEnds = Convert.ToDateTime(myData.Rows[i].ItemArray[6]),
+                        IsReturned = (bool)myData.Rows[i].ItemArray[7]
+                    };
+                    data.Add(datum);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return data;
         }
 
         public int BringBookStock(int bookId)

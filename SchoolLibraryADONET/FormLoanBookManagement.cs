@@ -1,4 +1,5 @@
 ﻿using SchoolLibraryADONET_BusinessLogicLayer;
+using SchoolLibraryADONET_BusinessLogicLayer.ViewModals;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -116,10 +117,22 @@ namespace SchoolLibraryADONET
         {
             dataGridViewLoanedBooks.MultiSelect = false;
             dataGridViewLoanedBooks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewLoanedBooks.DataSource = bookLoanOperationManager.BringDataToGrid();
+
+            //Data retrieved through datagrid
+            //dataGridViewLoanedBooks.DataSource = bookLoanOperationManager.BringDataToGrid();
+            //dataGridViewLoanedBooks.Columns["OperationId"].Visible = false;
+            //dataGridViewLoanedBooks.Columns["BookId"].Visible = false;
+
+            //Data will be obtained through viewmodal for datasource's datagridview.
+            List<OperationViewModal> list = bookLoanOperationManager.BringDataToGridWithViewModal();
+            dataGridViewLoanedBooks.DataSource = list;
             dataGridViewLoanedBooks.Columns["OperationId"].Visible = false;
             dataGridViewLoanedBooks.Columns["BookId"].Visible = false;
+            dataGridViewLoanedBooks.Columns["StudentId"].Visible = false;
+            dataGridViewLoanedBooks.Columns["isReturned"].Visible = false;
 
+            //To modify text header of the column
+            dataGridViewLoanedBooks.Columns["IsReturnedString"].HeaderText = "Availability";
 
             //datagridview width configuration
             for (int i = 0; i < dataGridViewLoanedBooks.Columns.Count; i++)
