@@ -1,5 +1,6 @@
 ﻿using SchoolLibraryADONET_BusinessLogicLayer;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -75,7 +76,28 @@ namespace SchoolLibraryADONET
 
                 if (flag)
                 {
-                    MessageBox.Show("WILL PERFORM ADDING WITH INSERT");
+                    string startDate = $"'{dateTimePickerStarts.Value.ToString("yyyy-MM-dd HH:mm:ss")}'";
+                    string endDate = $"'{dateTimePickerEnds.Value.ToString("yyyy-MM-dd HH:mm:ss")}'";
+                    Hashtable htData = new Hashtable();
+                    htData.Add("StudentId", (int)comboBoxStudent.SelectedValue);
+                    htData.Add("BookId", (int)comboBoxBook.SelectedValue);
+                    htData.Add("LoanStarts", startDate);
+                    htData.Add("LoanEnds", endDate);
+
+                    if (bookLoanOperationManager.RegisterBookLoan("LoanBook", htData))
+                    {
+                        MessageBox.Show("Booking operation has been successfuly saved.");
+                        //Cleaning
+                        GridViewConfigureAndFill();
+                        CleanStudentGroupBox();
+                        BookGroupBoxDisabled();
+                        LoanDatesGroupBoxDisabled();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unexpected error has occured!");
+                    }
+
                 }
 
                 else
@@ -96,6 +118,15 @@ namespace SchoolLibraryADONET
             dataGridViewLoanedBooks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewLoanedBooks.DataSource = bookLoanOperationManager.BringDataToGrid();
             dataGridViewLoanedBooks.Columns["OperationId"].Visible = false;
+            dataGridViewLoanedBooks.Columns["BookId"].Visible = false;
+
+
+            //datagridview width configuration
+            for (int i = 0; i < dataGridViewLoanedBooks.Columns.Count; i++)
+            {
+                dataGridViewLoanedBooks.Columns[i].Width = 160;
+            }
+            dataGridViewLoanedBooks.ContextMenuStrip = contextMenuStrip1;
         }
 
         private void BringAllBooksToCombo()
@@ -173,6 +204,43 @@ namespace SchoolLibraryADONET
             dateTimePickerEnds.Value = dateTimePickerStarts.Value.AddDays(1);
 
             dateTimePickerEnds.MaxDate = dateTimePickerStarts.Value.AddMonths(3);
+        }
+
+        private void returnBookToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //chosen line will be retrieved from datagridview, then chosen line's operationId and bookId will be received
+                DataGridViewRow chosenLine = dataGridViewLoanedBooks.SelectedRows[0];
+
+                //OperationId
+                int operationId = (int)chosenLine.Cells["OperationId"].Value;
+
+                //BookId
+                int bookId = (int)chosenLine.Cells["BookId"].Value;
+
+                bool returnResult = false;
+                returnResult = bookLoanOperationManager.ReturnLoanedBook("LoanBook", operationId, bookId);
+
+                if (returnResult)
+                {
+                    MessageBox.Show("Book has been delivered. Have a life enjoyin books forever!");
+
+                    //cleaning
+                    GridViewConfigureAndFill();
+                    CleanStudentGroupBox();
+                    BookGroupBoxDisabled();
+                    LoanDatesGroupBoxDisabled();
+                }
+                else
+                {
+                    MessageBox.Show("ERROR: Book hasn't been returned!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error has occured! " + ex.Message + " " + ex.ToString());
+            }
         }
     }
 }

@@ -29,21 +29,25 @@ namespace SchoolLibraryADONET
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBoxStudent = new System.Windows.Forms.GroupBox();
             this.comboBoxStudent = new System.Windows.Forms.ComboBox();
             this.groupBoxBook = new System.Windows.Forms.GroupBox();
             this.comboBoxBook = new System.Windows.Forms.ComboBox();
             this.groupBoxLoanDates = new System.Windows.Forms.GroupBox();
+            this.UC_MyButtonLoan = new SchoolLibraryADONET.UC_MyButton();
             this.dateTimePickerEnds = new System.Windows.Forms.DateTimePicker();
             this.dateTimePickerStarts = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridViewLoanedBooks = new System.Windows.Forms.DataGridView();
-            this.UC_MyButtonLoan = new SchoolLibraryADONET.UC_MyButton();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.returnBookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxStudent.SuspendLayout();
             this.groupBoxBook.SuspendLayout();
             this.groupBoxLoanDates.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLoanedBooks)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxStudent
@@ -98,6 +102,13 @@ namespace SchoolLibraryADONET
             this.groupBoxLoanDates.TabStop = false;
             this.groupBoxLoanDates.Text = "Choose Date Intervals";
             // 
+            // UC_MyButtonLoan
+            // 
+            this.UC_MyButtonLoan.Location = new System.Drawing.Point(9, 176);
+            this.UC_MyButtonLoan.Name = "UC_MyButtonLoan";
+            this.UC_MyButtonLoan.Size = new System.Drawing.Size(453, 46);
+            this.UC_MyButtonLoan.TabIndex = 6;
+            // 
             // dateTimePickerEnds
             // 
             this.dateTimePickerEnds.Format = System.Windows.Forms.DateTimePickerFormat.Short;
@@ -146,12 +157,20 @@ namespace SchoolLibraryADONET
             this.dataGridViewLoanedBooks.Size = new System.Drawing.Size(1153, 361);
             this.dataGridViewLoanedBooks.TabIndex = 0;
             // 
-            // UC_MyButtonLoan
+            // contextMenuStrip1
             // 
-            this.UC_MyButtonLoan.Location = new System.Drawing.Point(9, 176);
-            this.UC_MyButtonLoan.Name = "UC_MyButtonLoan";
-            this.UC_MyButtonLoan.Size = new System.Drawing.Size(453, 46);
-            this.UC_MyButtonLoan.TabIndex = 6;
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.returnBookToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 56);
+            // 
+            // returnBookToolStripMenuItem
+            // 
+            this.returnBookToolStripMenuItem.Name = "returnBookToolStripMenuItem";
+            this.returnBookToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.returnBookToolStripMenuItem.Text = "Return Book";
+            this.returnBookToolStripMenuItem.Click += new System.EventHandler(this.returnBookToolStripMenuItem_Click);
             // 
             // FormLoanBookManagement
             // 
@@ -170,6 +189,7 @@ namespace SchoolLibraryADONET
             this.groupBoxLoanDates.ResumeLayout(false);
             this.groupBoxLoanDates.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLoanedBooks)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -187,5 +207,7 @@ namespace SchoolLibraryADONET
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dataGridViewLoanedBooks;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem returnBookToolStripMenuItem;
     }
 }
